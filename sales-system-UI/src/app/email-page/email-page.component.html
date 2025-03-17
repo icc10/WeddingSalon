@@ -1,0 +1,55 @@
+<div id="container">
+
+  <div id="emailHeader">
+
+      <div id="sendAndToDiv">
+
+        <div id="sendButtonDiv">
+          <img id="sendButton" src="./myAssets/send.png" height="80px" width="80px" (click)="sendEmail()">
+        </div>
+
+        <div id='toInfoDiv'>
+          <div>
+            <p>FROM:</p>
+            <input class="specificEmails" type="text" placeholder="Sender" [(ngModel)]="from">
+            <input class="specificEmails" type="text" placeholder="Password" [(ngModel)]="password">
+
+            <p class="emailTitles">TO:</p>
+            <button class="emailAction">Companies On Email 1</button>
+            <button class="emailAction">Companies On Email 2</button>
+            <button class="emailAction">Companies On Email 3</button>
+          </div>
+
+          <div >
+            <input type="text" id="specificEmails" placeholder="Enter Emails Separated By ','" [(ngModel)]="emails">
+          </div>
+        </div>
+      </div>
+
+    <div id="subjectAndTemplatesDiv">
+      <div id="subjectDiv">
+        <p class="emailTitles">Subject:</p>
+        <input type="text" id="subjectTxt" [(ngModel)]="subject">
+      </div>
+
+      <div id="templatesDiv">
+        <p class="emailTitles">Email Templates:</p>
+        <div class="dropdown">
+          <button class="dropbtn">Email Action #</button>
+          <div class="dropdownContent">
+            <div class="option"><p value="1">1</p></div>
+            <div class="option"><p value="2">2</p></div>
+            <div class="option"><p value="3">3</p></div>
+          </div>
+        </div>
+
+        <div class="dropdown"><button class="dropbtn">No-Show</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="emailBody">
+    <textarea type="text" id="emailBodyTxt" [(ngModel)]="body"></textarea>
+  </div>
+
+</div>

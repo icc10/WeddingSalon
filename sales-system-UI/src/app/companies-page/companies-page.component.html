@@ -1,0 +1,389 @@
+<div id="body">
+
+  <div id="companiesDiv">
+
+    <div id="searchFiltersDiv">
+      <img id="searchImg" src="./myAssets/search.png" width="20px" height="20px">
+      <input type="text" id="searchTxt" placeholder="Enter Your Search" [(ngModel)]="search" (keyup.enter)="searchBy()">
+      <select class="searchDropdown" id="searchOption" [(ngModel)]="searchType" >
+        <option class="searchOptions" value="" selected>Select Search Type</option>
+        <option class="searchOptions" value="name">Company Name</option>
+        <option class="searchOptions" value="email">Email</option>
+        <option class="searchOptions" value="firstName">First Name</option>
+        <option class="searchOptions" value="lastName">Last Name</option>
+      </select>
+      <button class="filtersImg" (click)="popupSortToggle()"><img src="./myAssets/sort.webp" width="50px" height="40px"></button>
+      <button class="filtersImg" (click)="popupToggle()"><img src="./myAssets/filter.png" width="50px" height="40px"></button>
+    </div>
+
+    <div *ngIf="showPopup" class="filtersPopUp">
+      <div class="filtersTitle">
+        <h3>Filters</h3>
+        <button class="closeButton" (click)="popupToggle()">&#10006;</button>
+      </div>
+
+      <div id="filterOptions">
+        <label for="rep" class="inputLabel">Rep Filter</label>
+        <select class="dropdown" id="rep" [(ngModel)]="filter" (change)="filterByRep()">
+          <option value="S">S</option>
+          <option value="BM">BM</option>
+          <option value="TB">TB</option>
+        </select>
+
+        <label for="targetClient" class="inputLabel">Client Type</label>
+        <select class="dropdown" id="targetClient" [(ngModel)]="clientType" (change)="filterByClientType()">
+          <option value="Prospective Vendors">Prospective Vendors</option>
+          <option value="Recent Contacts">Recent Contacts</option>
+          <option value="Past Contacts">Past Contacts</option>
+          <option value="No-Show Prospects">No-show Prospects</option>
+          <option value="Canceled Appointments">Canceled Appointments</option>
+        </select>
+
+<!--        <label>Filter Location</label><br>-->
+<!--        <label class="filterLabel" for="NY">NY</label>-->
+<!--        <button type="checkbox" id="NY" class="selectButton" name="locations" value="NY" [(ngModel)]="ny" (change)="filterByLocation()"></button>-->
+<!--        <label class="filterLabel" for="LA">LA</label>-->
+<!--        <button type="checkbox" id="LA" class="selectButton" name="locations" value="LA" [(ngModel)]="la" (change)="filterByLocation()"></button>-->
+<!--        <label class="filterLabel" for="FL">FL</label>-->
+<!--        <button type="checkbox" id="FL" class="selectButton" name="locations" value="FL" [(ngModel)]="fl" (change)="filterByLocation()"></button>-->
+<!--        <label class="filterLabel" for="TX">TX</label>-->
+<!--        <button type="checkbox" id="TX" class="selectButton" name="locations" value="TX" [(ngModel)]="tx" (change)="filterByLocation()"></button>-->
+<!--        <label class="filterLabel" for="IL">IL</label>-->
+<!--        <button type="checkbox" id="IL" class="selectButton" name="locations" value="IL" [(ngModel)]="il" (change)="filterByLocation()"></button>-->
+<!--        <label class="filterLabel" for="DC">DC</label>-->
+<!--        <button type="checkbox" id="DC" class="selectButton" name="locations" value="DC" [(ngModel)]="dc" (change)="filterByLocation()"></button>-->
+
+      </div>
+    </div>
+
+    <div *ngIf="showSortPopup" class="filtersPopUp">
+      <div class="filtersTitle">
+        <h3>Sort By</h3>
+        <button class="closeButton" (click)="popupSortToggle()">&#10006;</button>
+      </div>
+
+      <div id="sortOptions">
+        <p class="optionsTitle">Lead Date</p>
+        <input type="radio" name="sortButton" value="leadDateAsc" (click)="sortByLeadDate('asc')"><label>Ascending</label>
+        <br>
+        <input type="radio" name="sortButton" value="leadDateDes" (click)="sortByLeadDate('des')"><label>Descending</label>
+
+      </div>
+
+
+    </div>
+    <div *ngIf="showPopup || showSortPopup" id="disableScreen"></div>
+
+
+
+    <div id="selectAllDiv">
+      <button class="pageImg" (click)="nextPage()"><img src="./myAssets/nextPage.png" width="20px" height="20px"></button>
+      <button class="pageImg" (click)="prevPage()"><img src="./myAssets/prevPage.png" width="20px" height="20px"></button>
+      <p>Page: {{pageNum}}</p>
+    </div>
+
+    <div id="tableContainer">
+      <table>
+      <thead>
+        <tr id="tableHeader">
+          <th id="selectAll"><input class="selectButton" name="companies" type="checkbox" [(ngModel)]="allSelected" (click) = "toggleChecks()">Select All</th>
+          <th>Company</th>
+          <th>Lead Date</th>
+          <th>Last Call</th>
+          <th>Last Follow Up</th>
+          <th>Rep</th>
+          <th>Origin</th>
+          <th>Category</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Title</th>
+          <th>Priority</th>
+          <th>Email</th>
+          <th>Last Email Client</th>
+          <th>Note</th>
+          <th>Temp Type</th>
+          <th>Status</th>
+          <th>NY</th>
+          <th>LA</th>
+          <th>FL</th>
+          <th>TX</th>
+          <th>IL</th>
+          <th>DC</th>
+          <th>Last Action</th>
+          <th>Show Outreach</th>
+          <th>Said No To</th>
+          <th>Target Client</th>
+          <th>Email Action</th>
+          <th>Mobile</th>
+          <th>Office</th>
+          <th>Address</th>
+          <th>City</th>
+          <th>ZIP</th>
+          <th>Social Media</th>
+          <th>Next Follow Up</th>
+          <th>Inquiry Status</th>
+          <th>Website</th>
+          <th>Vendor Tour</th>
+          <th>Calendly Source</th>
+          <th>Recommender</th>
+          <th>Inquiry Origin</th>
+          <th>ID</th>
+        </tr>
+      </thead>
+        <tbody>
+        <tr *ngFor="let company of companies | slice:startIndex:endIndex; let index = index" class="data-row">
+          <td><input type="checkbox" class="selectButton" name="companies" [(ngModel)]='selected[company.id]'></td>
+          <td><input type="text" id="company" class="dataTxt" [(ngModel)]="company.company" (change)="onTextChange(company.id, index, 'company')"></td>
+          <td class="dateTd">
+            <div *ngIf="changeLeadDate[index]">
+              <mat-form-field appearance="outline" class="dateField" dense [style.width]="'150px'" [style.height]="'50px'" [style.font-size]="'13px'">
+                <mat-label>YYYY/MM/DD</mat-label>
+                <input matInput [matDatepicker]="datepicker" (dateChange)="onDateChange($event, company.id, index, 'leadDate')"/>
+                <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-datepicker #datepicker>
+                  <mat-datepicker-actions>
+                    <button mat-button matDatepickerCancel (click)="toggleChangeLeadDate(index)">Cancel</button>
+                    <button mat-raised-button matDatepickerApply (dateChange)="onDateChange($event, company.id, index, 'leadDate')">Apply</button>
+                  </mat-datepicker-actions>
+                </mat-datepicker>
+              </mat-form-field>
+            </div>
+            <button *ngIf ="!changeLeadDate[index]" class="formattedDate" (click) = "toggleChangeLeadDate(index)">{{ isValidDate(company.leadDate) ? (company.leadDate?.toISOString()?.slice(0, 10)) : 'No date available' }}</button>
+          </td>
+          <td class="dateTd">
+            <div *ngIf="changeLastCall[index]">
+              <mat-form-field appearance="outline" class="dateField" dense [style.width]="'150px'" [style.height]="'50px'" [style.font-size]="'13px'">
+                <mat-label>YYYY/MM/DD</mat-label>
+                <input matInput [matDatepicker]="datepicker" (dateChange)="onDateChange($event, company.id, index, 'lastCall')"/>
+                <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-datepicker #datepicker>
+                  <mat-datepicker-actions>
+                    <button mat-button matDatepickerCancel (click)="toggleChangeLastCall(index)">Cancel</button>
+                    <button mat-raised-button matDatepickerApply (dateChange)="onDateChange($event, company.id, index, 'lastCall')">Apply</button>
+                  </mat-datepicker-actions>
+                </mat-datepicker>
+              </mat-form-field>
+            </div>
+            <button *ngIf ="!changeLastCall[index]" class="formattedDate" (click) = "toggleChangeLastCall(index)">{{ isValidDate(company.lastCall) ? (company.lastCall?.toISOString()?.slice(0, 10)) : 'No date available' }}</button>
+          </td>
+          <td class="dateTd">
+            <div *ngIf="changeLastFollowUp[index]">
+              <mat-form-field appearance="outline" class="dateField" dense [style.width]="'150px'" [style.height]="'50px'" [style.font-size]="'13px'">
+                <mat-label>YYYY/MM/DD</mat-label>
+                <input matInput [matDatepicker]="datepicker" (dateChange)="onDateChange($event, company.id, index, 'lastFollowUp')"/>
+                <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-datepicker #datepicker>
+                  <mat-datepicker-actions>
+                    <button mat-button matDatepickerCancel (click)="toggleChangeLastFollowUp(index)">Cancel</button>
+                    <button mat-raised-button matDatepickerApply (dateChange)="onDateChange($event, company.id, index, 'lastFollowUp')">Apply</button>
+                  </mat-datepicker-actions>
+                </mat-datepicker>
+              </mat-form-field>
+            </div>
+            <button *ngIf ="!changeLastFollowUp[index]" class="formattedDate" (click) = "toggleChangeLastFollowUp(index)">{{ isValidDate(company.lastFollowUp) ? (company.lastFollowUp?.toISOString()?.slice(0, 10)) : 'No date available' }}</button>
+          </td>
+          <td>
+            <div class="dropdown">
+              <button class="dropbtn">{{company.rep}}</button>
+              <div class="dropdownContent">
+                <div class="addOption"><input class="addDomainInput" placeholder="Enter New Value" (blur)="emptyNewDomain()" (keyup.enter)="addDomainValue('rep_domain', newDomain)" [(ngModel)]='newDomain'></div>
+                <div *ngFor="let value of repDomain">
+                  <div class="option">
+                    <div class="row1"><button class="optionButton" (click)="changeRep(company.id, value)">{{value}}</button></div>
+                    <div class="row2"><button class="minus" (click)="deleteDomainValue('rep_domain', value)"><img src="./myAssets/minus.png" width="13px" height="13px"></button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="dropdown">
+              <button class="dropbtn">{{company.origin}}</button>
+              <div class="dropdownContent">
+                <div class="addOption"><input class="addDomainInput" placeholder="Enter New Value" (blur)="emptyNewDomain()" (keyup.enter)="addDomainValue('origin_domain', newDomain)" [(ngModel)]='newDomain'></div>
+                <div *ngFor="let value of originDomain">
+                  <div class="option">
+                    <div class="row1"><button class="optionButton" (click)="changeOrigin(company.id, value)">{{value}}</button></div>
+                    <div class="row2"><button class="minus" (click)="deleteDomainValue('origin_domain', value)"><img src="./myAssets/minus.png" width="13px" height="13px"></button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>{{ company.category }}</td>
+          <td><input type="text" class="dataTxt" [(ngModel)]="company.firstName" (change)="onTextChange(company.id, index, 'firstName')"></td>
+          <td><input type="text" class="dataTxt" [(ngModel)]="company.lastName" (change)="onTextChange(company.id, index, 'lastName')"></td>
+          <td><input type="text" class="dataTxt" [(ngModel)]="company.title" (change)="onTextChange(company.id, index, 'title')"></td>
+          <td>{{ company.priority }}</td>
+          <td><input type="text" class="dataTxt" [(ngModel)]="company.email"  (change)="onTextChange(company.id, index, 'email')"></td>
+          <td class="dateTd">
+            <div *ngIf="changeLastEmailClient[index]">
+              <mat-form-field appearance="outline" class="dateField" dense [style.width]="'150px'" [style.height]="'50px'" [style.font-size]="'13px'">
+                <mat-label>YYYY/MM/DD</mat-label>
+                <input matInput [matDatepicker]="datepicker" (dateChange)="onDateChange($event, company.id, index, 'lastEmailClient')"/>
+                <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-datepicker #datepicker>
+                  <mat-datepicker-actions>
+                    <button mat-button matDatepickerCancel (click)="toggleChangeLastEmailClient(index)">Cancel</button>
+                    <button mat-raised-button matDatepickerApply (dateChange)="onDateChange($event, company.id, index, 'lastEmailClient')">Apply</button>
+                  </mat-datepicker-actions>
+                </mat-datepicker>
+              </mat-form-field>
+            </div>
+            <button *ngIf ="!changeLastEmailClient[index]" class="formattedDate" (click) = "toggleChangeLastEmailClient(index)">{{ isValidDate(company.lastEmailClient) ? (company.lastEmailClient?.toISOString()?.slice(0, 10)) : 'No date available' }}</button>
+          </td>
+          <td><input type="text" class="dataTxt" [(ngModel)]="company.note"  (change)="onTextChange(company.id, index, 'note')"></td>
+          <td>
+            <div class="dropdown">
+              <button class="dropbtn">{{company.tempType}}</button>
+              <div class="dropdownContent">
+                <div class="addOption"><input class="addDomainInput" placeholder="Enter New Value" (blur)="emptyNewDomain()" (keyup.enter)="addDomainValue('temp_type_domain', newDomain)" [(ngModel)]='newDomain'></div>
+                <div *ngFor="let value of tempTypeDomain">
+                  <div class="option">
+                    <div class="row1"><button class="optionButton" (click)="changeTempType(company.id, value)">{{value}}</button></div>
+                    <div class="row2"><button class="minus" (click)="deleteDomainValue('temp_type_domain', value)"><img src="./myAssets/minus.png" width="13px" height="13px"></button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="largeTd">
+            <div class="dropdown">
+              <button class="dropbtn">{{company.status}}</button>
+              <div class="dropdownContent">
+                <div class="addOption"><input class="addDomainInput" placeholder="Enter New Value" (blur)="emptyNewDomain()" (keyup.enter)="addDomainValue('status_domain', newDomain)" [(ngModel)]='newDomain'></div>
+                <div *ngFor="let value of statusDomain">
+                  <div class="option">
+                    <div class="row1"><button class="optionButton" (click)="changeStatus(company.id, value)">{{value}}</button></div>
+                    <div class="row2"><button class="minus" (click)="deleteDomainValue('status_domain', value)"><img src="./myAssets/minus.png" width="13px" height="13px"></button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="locationDiv"><button class="binaryButton" (click)="toggleNy(company.id)">{{company.ny}}</button></td>
+          <td class="locationDiv"><button class="binaryButton" (click)="toggleLa(company.id)">{{company.la}}</button></td>
+          <td class="locationDiv"><button class="binaryButton" (click)="toggleFl(company.id)">{{company.fl}}</button></td>
+          <td class="locationDiv"><button class="binaryButton" (click)="toggleTx(company.id)">{{company.tx}}</button></td>
+          <td class="locationDiv"><button class="binaryButton" (click)="toggleIl(company.id)">{{company.il}}</button></td>
+          <td class="locationDiv"><button class="binaryButton" (click)="toggleDc(company.id)">{{company.dc}}</button></td>
+          <td class="largeTd">
+            <div class="dropdown">
+              <button class="dropbtn">{{company.lastAction}}</button>
+              <div class="dropdownContent">
+                <div class="addOption"><input class="addDomainInput" placeholder="Enter New Value" (blur)="emptyNewDomain()" (keyup.enter)="addDomainValue('last_action_domain', newDomain)" [(ngModel)]='newDomain'></div>
+                <div *ngFor="let value of lastActionDomain">
+                  <div class="option">
+                    <div class="row1"><button class="optionButton" (click)="changeLastAction(company.id, value)">{{value}}</button></div>
+                    <div class="row2"><button class="minus" (click)="deleteDomainValue('last_action_domain', value)"><img src="./myAssets/minus.png" width="13px" height="13px"></button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td><input type="text" class="dataTxt" [(ngModel)]="company.showOutreach" (change)="onTextChange(company.id, index, 'showOutreach')"></td>
+          <td><input type="text" class="dataTxt" [(ngModel)]="company.saidNoTo" (change)="onTextChange(company.id, index, 'saidNoTo')"></td>
+          <td>
+            <div class="dropdown">
+              <button class="dropbtn">{{company.targetClient}}</button>
+              <div class="dropdownContent">
+                <div class="addOption"><input class="addDomainInput" placeholder="Enter New Value" (blur)="emptyNewDomain()" (keyup.enter)="addDomainValue('target_client_domain', newDomain)" [(ngModel)]='newDomain'></div>
+                <div *ngFor="let value of targetClientDomain">
+                  <div class="option">
+                    <div class="row1"><button class="optionButton" (click)="changeTargetClient(company.id, value)">{{value}}</button></div>
+                    <div class="row2"><button class="minus" (click)="deleteDomainValue('target_client_domain', value)"><img src="./myAssets/minus.png" width="13px" height="13px"></button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="dropdown">
+              <button class="dropbtn">{{company.emailAction}}</button>
+              <div class="dropdownContent">
+                <div class="addOption"><input class="addDomainInput" placeholder="Enter New Value" (blur)="emptyNewDomain()" (keyup.enter)="addDomainValue('email_action_domain', newDomain)" [(ngModel)]='newDomain'></div>
+                <div *ngFor="let value of emailActionDomain">
+                  <div class="option">
+                    <div class="row1"><button class="optionButton" (click)="changeEmailAction(company.id, value)">{{value}}</button></div>
+                    <div class="row2"><button class="minus" (click)="deleteDomainValue('email_action_domain', value)"><img src="./myAssets/minus.png" width="13px" height="13px"></button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td><input type="text" class="dataTxt" [(ngModel)]="company.mobile" (change)="onTextChange(company.id, index, 'mobile')"></td>
+          <td><input type="text" class="dataTxt" [(ngModel)]="company.office" (change)="onTextChange(company.id, index, 'office')"></td>
+          <td><input type="text" class="dataTxt" [(ngModel)]="company.address" (change)="onTextChange(company.id, index, 'address')"></td>
+          <td><input type="text" class="dataTxt" [(ngModel)]="company.city" (change)="onTextChange(company.id, index, 'city')"></td>
+          <td><input type="text" class="dataTxt" [(ngModel)]="company.zip" (change)="onTextChange(company.id, index, 'zip')"></td>
+          <td><input type="text" class="dataTxt" [(ngModel)]="company.socialMedia" (change)="onTextChange(company.id, index, 'socialMedia')"></td>
+          <td class="dateTd">
+            <div *ngIf="changeNextFollowUp[index]">
+              <mat-form-field appearance="outline" class="dateField" dense [style.width]="'150px'" [style.height]="'50px'" [style.font-size]="'13px'">
+                <mat-label>YYYY/MM/DD</mat-label>
+                <input matInput [matDatepicker]="datepicker" (dateChange)="onDateChange($event, company.id, index, 'nextFollowUp')"/>
+                <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-datepicker #datepicker>
+                  <mat-datepicker-actions>
+                    <button mat-button matDatepickerCancel (click)="toggleChangeNextFollowUp(index)">Cancel</button>
+                    <button mat-raised-button matDatepickerApply (dateChange)="onDateChange($event, company.id, index, 'nextFollowUp')">Apply</button>
+                  </mat-datepicker-actions>
+                </mat-datepicker>
+              </mat-form-field>
+            </div>
+            <button *ngIf ="!changeNextFollowUp[index]" class="formattedDate" (click) = "toggleChangeNextFollowUp(index)">{{ isValidDate(company.nextFollowUp) ? (company.nextFollowUp?.toISOString()?.slice(0, 10)) : 'No date available' }}</button>
+          </td>
+          <td>{{ company.inquiryStatus }}</td>
+          <td><input type="text" class="dataTxt" [(ngModel)]="company.website" (change)="onTextChange(company.id, index, 'website')"></td>
+          <td><button class="binaryButton" (click)="toggleVendorTour(company.id)">{{company.vendorTour}}</button></td>
+          <td>
+            <div class="dropdown">
+              <button class="dropbtn">{{company.calendlySource}}</button>
+              <div class="dropdownContent">
+                <div class="addOption"><input class="addDomainInput" placeholder="Enter New Value" (blur)="emptyNewDomain()" (keyup.enter)="addDomainValue('calendly_source_domain', newDomain)" [(ngModel)]='newDomain'></div>
+                <div *ngFor="let value of calendlySourceDomain">
+                  <div class="option">
+                    <div class="row1"><button class="optionButton" (click)="changeCalendlySource(company.id, value)">{{value}}</button></div>
+                    <div class="row2"><button class="minus" (click)="deleteDomainValue('calendly_source_domain', value)"><img src="./myAssets/minus.png" width="13px" height="13px"></button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="dropdown">
+              <button class="dropbtn">{{company.recommender}}</button>
+              <div class="dropdownContent">
+                <div class="addOption"><input class="addDomainInput" placeholder="Enter New Value" (blur)="emptyNewDomain()" (keyup.enter)="addDomainValue('recommender_domain', newDomain)" [(ngModel)]='newDomain'></div>
+                <div *ngFor="let value of recommenderDomain">
+                  <div class="option">
+                    <div class="row1"><button class="optionButton" (click)="changeRecommender(company.id, value)">{{value}}</button></div>
+                    <div class="row2"><button class="minus" (click)="deleteDomainValue('recommender_domain', value)"><img src="./myAssets/minus.png" width="13px" height="13px"></button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="dropdown">
+              <button class="dropbtn">{{company.inquiryOrigin}}</button>
+              <div class="dropdownContent">
+                <div class="addOption"><input class="addDomainInput" placeholder="Enter New Value" (blur)="emptyNewDomain()" (keyup.enter)="addDomainValue('inquiry_origin_domain', newDomain)" [(ngModel)]='newDomain'></div>
+                <div *ngFor="let value of inquiryOriginDomain">
+                  <div class="option">
+                    <div class="row1"><button class="optionButton" (click)="changeInquiryOrigin(company.id, value)">{{value}}</button></div>
+                    <div class="row2"><button class="minus" (click)="deleteDomainValue('inquiry_origin_domain', value)"><img src="./myAssets/minus.png" width="13px" height="13px"></button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>{{index}}</td>
+
+
+        </tr>
+        </tbody>
+    </table>
+    </div>
+  </div>
+</div>
